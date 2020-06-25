@@ -5,10 +5,9 @@ const config = require('../config/config')
 module.exports = function (req, res, next) {
   console.log(req.headers['authorization'])
     const token = req.headers['authorization']; // Create token found in headers
-    console.log(token)
     // Check if token was found in headers
     if (!token) {
-     res.json({ success: false, message: 'No token provided' }); // Return error
+     res.status(401).json({ success: false, message: 'No token provided' }); // Return error
     } 
     // Verify the token is valid
     jwt.verify(token, config.SECRET_KEY, (err, decoded) => {
