@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
-
+const Schema = mongoose.Schema
 /**
  * topics: nature, people, technology
  */
-
+const topics = ["nature", "people", "technology"]
 let imageSchema = new mongoose.Schema({
     created_at: { type: Date, required: true, default: Date.now },
     urls: {
@@ -11,13 +11,12 @@ let imageSchema = new mongoose.Schema({
         full: { type: String },
     },
     topics: {
-        type: String,
+        type: mongoose.Schema.ObjectId,
+        ref: 'Topic'
     },
     title: {
-        type:String
+        type: String
     }
 })
 
-let Image = mongoose.model('Image', imageSchema)
-
-module.exports = Image
+module.exports = mongoose.model('Image', imageSchema)

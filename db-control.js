@@ -6,10 +6,11 @@ const fs = require('fs')
 const User = require('./models/user.model')
 const Token = require('./models/token.model')
 const Image = require('./models/image.model')
+const Topic = require('./models/topic.model')
 // Connect to DB
 
 const images = JSON.parse(fs.readFileSync(`${__dirname}/data-fake/data-fake.json`, 'utf-8'))
-
+const topics = JSON.parse(fs.readFileSync(`${__dirname}/data-fake/topic.json`, 'utf-8'))
 mongoose.connect(config.URI_MONGO, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -28,6 +29,7 @@ mongoose.connect(config.URI_MONGO, {
 const importData = async () => {
     try {
         await Image.create(images)
+        await Topic.create(topics)
         console.log('Data imported...'.green.inverse)
         process.exit()
     } catch (error) {
@@ -38,9 +40,10 @@ const importData = async () => {
 // Delete data
 const deleteData = async () => {
     try {
-        await User.deleteMany()
+        // await User.deleteMany()
         await Token.deleteMany()
         await Image.deleteMany()
+        await Topic.deleteMany()
         console.log('Data Destroyed...'.red.inverse)
         process.exit()
     } catch (error) {

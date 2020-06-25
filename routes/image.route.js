@@ -27,4 +27,7 @@ const validateToken = require('../middlewares/validateToken');
   ============== */
   router.get('/p/:page',validateToken, imageController.getImagesPerPage);
 
+
+
+  router.post('/u', imageController.uploadImage);
   module.exports = router;

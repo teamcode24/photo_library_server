@@ -90,3 +90,12 @@ exports.getImagesPerPage = async (req,res) => {
         })
     })
 }
+
+exports.uploadImage = async (req,res) => {
+    await Image.create(req.body, (err)=> {
+        if (err) {
+            return res.status(400).json({message: err})
+        }
+        res.status(200).json({message: 'Upload success'})
+    })
+}
