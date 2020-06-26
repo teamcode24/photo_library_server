@@ -17,7 +17,12 @@ let topicSchema = new mongoose.Schema({
     },
     description: {
         type: String
-    }
+    },
+    images: [
+        {
+            type: Object
+        }
+    ]
 })
 
 module.exports = mongoose.model('Topic', topicSchema)

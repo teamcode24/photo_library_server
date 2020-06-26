@@ -14,6 +14,7 @@ const passport = require('./config/passport');
 
 var authRouter = require('./routes/auth.route')
 var imageRouter = require('./routes/image.route')
+var topicRouter = require('./routes/topic.route');
 var app = express();
 
 // view engine setup
@@ -55,6 +56,7 @@ mongoose.connect(config.URI_MONGO, {
 
 app.use('/api/v1/users', authRouter);
 app.use('/api/v1/images', imageRouter);
+app.use('/api/v1/t', topicRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404, 'test'));

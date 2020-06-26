@@ -11,6 +11,9 @@ const Topic = require('./models/topic.model')
 
 const images = JSON.parse(fs.readFileSync(`${__dirname}/data-fake/data-fake.json`, 'utf-8'))
 const topics = JSON.parse(fs.readFileSync(`${__dirname}/data-fake/topic.json`, 'utf-8'))
+const topics1 = JSON.parse(
+  fs.readFileSync(`${__dirname}/data-fake/topic1.json`, 'utf-8')
+);
 mongoose.connect(config.URI_MONGO, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -28,8 +31,8 @@ mongoose.connect(config.URI_MONGO, {
 // Import into DB
 const importData = async () => {
     try {
-        await Image.create(images)
-        await Topic.create(topics)
+        // await Image.create(images)
+        await Topic.create(topics1)
         console.log('Data imported...'.green.inverse)
         process.exit()
     } catch (error) {
@@ -41,8 +44,8 @@ const importData = async () => {
 const deleteData = async () => {
     try {
         // await User.deleteMany()
-        await Token.deleteMany()
-        await Image.deleteMany()
+        // await Token.deleteMany()
+        // await Image.deleteMany()
         await Topic.deleteMany()
         console.log('Data Destroyed...'.red.inverse)
         process.exit()

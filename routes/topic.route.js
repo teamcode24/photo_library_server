@@ -4,7 +4,7 @@ const validateToken = require('../middlewares/validateToken');
  /* ==============
      Get All Image Route
   ============== */
-  router.get('/t', topicController.getTopics);
+  router.get('/', topicController.getTopics);
 
 
   module.exports = router;
