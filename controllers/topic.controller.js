@@ -1,9 +1,9 @@
 const Topic = require('../models/topic.model')
 
 exports.getTopics = async (req,res,next) => {
-    await Topic.find({}, (err, topics)=> {
+    await Topic.find({},'title description', (err, topics)=> {
         if (err) {
-            res.json({ success: false, message: err }); // Return error message
+            return res.status(404).json({ success: false, message: err }); // Return error message
         }
         // Check if blogs were found in database
         if (!topics) {
@@ -11,5 +11,15 @@ exports.getTopics = async (req,res,next) => {
         } else {
             res.status(201).json({ success: true, topics: topics}); // Return success and blogs array
         }
+    })
+}
+
+exports.getTopic = async (req,res) => {
+    const topic = req.params.topic
+    await Topic.find({title: topic}, 'title description images', (err,topic)=> {
+        if (err) {
+            return res.status(404).json({success:false, message: 'No images found'})
+        }
+        res.status(200).json({ success: true, topics: topic });
     })
 }
