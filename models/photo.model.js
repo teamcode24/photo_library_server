@@ -5,11 +5,11 @@ const Schema = mongoose.Schema
  */
 const topics = ["nature", "people", "technology"]
 let photoSchema = new mongoose.Schema({
-    author: 
-        {
-            name: String,
-            avatar: String
-        }
+    author:
+    {
+        name: String,
+        avatar: String
+    }
     ,
     created_at: { type: Date, required: true, default: Date.now },
     urls: {
