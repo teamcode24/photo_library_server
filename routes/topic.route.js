@@ -7,4 +7,6 @@ const validateToken = require('../middlewares/validateToken');
 router.get('/', topicController.getTopics);
 
 router.get('/:topic', topicController.getTopic);
+
+router.post('/', topicController.createTopic);
 module.exports = router;

@@ -9,7 +9,6 @@ const topics = ["nature", "people", "technology"]
 let topicSchema = new mongoose.Schema({
     title: {
         type: String,
-        enum: topics
     },
     creator: {
         type: String,
@@ -20,14 +19,9 @@ let topicSchema = new mongoose.Schema({
     },
     photos: [
         {
-            created_at: { type: Date, required: true, default: Date.now },
-            urls: {
-                thumb: { type: String },
-                full: { type: String },
-            },
-            title: {
-                type: String
-            }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Photo",
+            default: []
         }
     ]
 })

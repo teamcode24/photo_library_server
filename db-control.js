@@ -14,6 +14,9 @@ const topics = JSON.parse(fs.readFileSync(`${__dirname}/data-fake/topic.json`, '
 const topics1 = JSON.parse(
   fs.readFileSync(`${__dirname}/data-fake/topic1.json`, 'utf-8')
 );
+const topics2 = JSON.parse(
+    fs.readFileSync(`${__dirname}/data-fake/topic2.json`, 'utf-8')
+  );
 mongoose.connect(config.URI_MONGO, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -32,7 +35,7 @@ mongoose.connect(config.URI_MONGO, {
 const importData = async () => {
     try {
         // await Image.create(images)
-        await Topic.create(topics1)
+        await Topic.create(topics2)
         console.log('Data imported...'.green.inverse)
         process.exit()
     } catch (error) {
