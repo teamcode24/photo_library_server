@@ -16,9 +16,9 @@ exports.getTopics = async (req,res,next) => {
 
 exports.getTopic = async (req,res) => {
     const topic = req.params.topic
-    await Topic.find({title: topic}, 'title description images', (err,topic)=> {
+    await Topic.find({title: topic}, 'title description photos', (err,topic)=> {
         if (err) {
-            return res.status(404).json({success:false, message: 'No images found'})
+            return res.status(404).json({success:false, message: 'No photos found'})
         }
         res.status(200).json({ success: true, topics: topic });
     })

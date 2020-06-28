@@ -5,7 +5,7 @@ const fs = require('fs')
 // Load models
 const User = require('./models/user.model')
 const Token = require('./models/token.model')
-const Image = require('./models/image.model')
+const Photo = require('./models/photo.model')
 const Topic = require('./models/topic.model')
 // Connect to DB
 

@@ -4,7 +4,13 @@ const Schema = mongoose.Schema
  * topics: nature, people, technology
  */
 const topics = ["nature", "people", "technology"]
-let imageSchema = new mongoose.Schema({
+let photoSchema = new mongoose.Schema({
+    author: 
+        {
+            name: String,
+            avatar: String
+        }
+    ,
     created_at: { type: Date, required: true, default: Date.now },
     urls: {
         thumb: { type: String },
@@ -19,4 +25,4 @@ let imageSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Image', imageSchema)
+module.exports = mongoose.model('Photo', photoSchema)

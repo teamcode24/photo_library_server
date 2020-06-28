@@ -8,7 +8,7 @@ const topics = ["nature", "people", "technology"]
 
 let topicSchema = new mongoose.Schema({
     title: {
-        type:String,
+        type: String,
         enum: topics
     },
     creator: {
@@ -18,9 +18,16 @@ let topicSchema = new mongoose.Schema({
     description: {
         type: String
     },
-    images: [
+    photos: [
         {
-            type: Object
+            created_at: { type: Date, required: true, default: Date.now },
+            urls: {
+                thumb: { type: String },
+                full: { type: String },
+            },
+            title: {
+                type: String
+            }
         }
     ]
 })

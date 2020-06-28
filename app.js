@@ -13,7 +13,7 @@ const session = require('express-session')
 const passport = require('./config/passport');
 
 var authRouter = require('./routes/auth.route')
-var imageRouter = require('./routes/image.route')
+var photoRouter = require('./routes/photo.route')
 var topicRouter = require('./routes/topic.route');
 var app = express();
 
@@ -55,7 +55,7 @@ mongoose.connect(config.URI_MONGO, {
 
 
 app.use('/api/v1/users', authRouter);
-app.use('/api/v1/images', imageRouter);
+app.use('/api/v1/photos', photoRouter);
 app.use('/api/v1/t', topicRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
