@@ -32,3 +32,12 @@ exports.createTopic = async (req, res) => {
         res.status(200).json({ success: true, message: 'Topic created' })
     })
 }
+
+exports.getTopicList = async (req, res) => {
+    await Topic.find({},'title -_id', (err, doc) => {
+        if (err) {
+            return res.status(404).json({ success: false, message: err })
+        }
+        res.status(200).json({ success: true, topics: doc })
+    })
+}

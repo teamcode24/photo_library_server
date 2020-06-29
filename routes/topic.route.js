@@ -5,6 +5,7 @@ const validateToken = require('../middlewares/validateToken');
      Get All Image Route
   ============== */
 router.get('/', topicController.getTopics);
+router.get('/list', topicController.getTopicList);
 
 router.get('/:topic', topicController.getTopic);
 
