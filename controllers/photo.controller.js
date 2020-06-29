@@ -51,7 +51,7 @@ exports.getRelatedPhotos = (req, res) => {
 
 exports.getPhotosByTopic = async (req, res) => {
     const topic = req.params.topic
-    await Topic.find({ title: topic })
+    await Topic.findOne({ title: topic })
     .populate('photos')
     .select('photos')
     .exec((err, photos) => {
@@ -64,7 +64,7 @@ exports.getPhotosByTopic = async (req, res) => {
             return res.json({ success: false, message: 'Photos not found.' }); // Return error message
         }
 
-        res.json({ success: true, all_photos: photos }); // Return success
+        res.json({ success: true, photos: photos.photos }); // Return success
     })
 }
 
