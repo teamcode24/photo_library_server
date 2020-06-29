@@ -16,7 +16,7 @@ exports.getTopics = async (req, res, next) => {
 
 exports.getTopic = async (req, res) => {
     const topic = req.params.topic
-    await Topic.find({ title: topic }).populate('photos').exec((err, doc) => {
+    await Topic.find({ title: topic }).select('-photos').exec((err, doc) => {
         if (err) {
             return res.status(404).json({ success: false, message: err })
         }

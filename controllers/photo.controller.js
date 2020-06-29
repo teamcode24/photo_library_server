@@ -51,17 +51,20 @@ exports.getRelatedPhotos = (req, res) => {
 
 exports.getPhotosByTopic = async (req, res) => {
     const topic = req.params.topic
-    await Photo.find({ topics: topic }, (err, Photos) => {
+    await Topic.find({ title: topic })
+    .populate('photos')
+    .select('photos')
+    .exec((err, photos) => {
         if (err) {
             return res.json({ success: false, message: 'Error topic Photo' }); // Return error message
         }
 
         // Check if blog was found by id
-        if (!Photos) {
+        if (!photos) {
             return res.json({ success: false, message: 'Photos not found.' }); // Return error message
         }
 
-        res.json({ success: true, Photos: Photos }); // Return success
+        res.json({ success: true, all_photos: photos }); // Return success
     })
 }
 
