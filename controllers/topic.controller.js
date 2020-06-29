@@ -1,7 +1,7 @@
 const Topic = require('../models/topic.model')
 
 exports.getTopics = async (req, res, next) => {
-    await Topic.find({}, 'title description creator avatar contributors', (err, topics) => {
+    await Topic.find({}, '-photos', (err, topics) => {
         if (err) {
             return res.status(404).json({ success: false, message: err }); // Return error message
         }
