@@ -1,7 +1,7 @@
 const Photo = require('../models/photo.model')
 const Topic = require('../models/topic.model')
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema
+
 exports.getPhotos = async (req, res, next) => {
     await Photo.find({}).exec((err, photos) => {
         if (err) {

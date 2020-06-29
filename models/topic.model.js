@@ -1,11 +1,5 @@
 const mongoose = require('mongoose')
 
-/**
- * topics: nature, people, technology
- */
-
-const topics = ["nature", "people", "technology"]
-
 let topicSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -17,13 +11,24 @@ let topicSchema = new mongoose.Schema({
     description: {
         type: String
     },
+    avatar: {
+        type: String,
+        default: 'https://picsum.photos/100/100'
+    },
+    backgroundImage: {
+        type: String,
+        default: 'https://picsum.photos/300/200'
+    },
     photos: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Photo",
-            default: []
+            default: [String]
         }
-    ]
+    ],
+    contributors: {
+        type: Number
+    }
 })
 
 module.exports = mongoose.model('Topic', topicSchema)
