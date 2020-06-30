@@ -84,7 +84,7 @@ exports.register = async (req, res, next) => {
                 });
             })
 
-            res.status(201).json({ success: true, message: 'Acount registered! \n A verification email has been sent to ' + user.email }); // Return success
+            res.status(201).json({ success: true, message: `Your email ${user.email} has not been confirmed. Change email or Resend Confirmation` }); // Return success
         }
     });
 }
