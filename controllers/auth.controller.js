@@ -2,7 +2,7 @@ const User = require('../models/user.model'); // Import User Model Schema
 const Token = require('../models/token.model'); // Import Token Model Schema
 const jwt = require('jsonwebtoken'); // Compact, URL-safe means of representing claims to be transferred between two parties.
 const config = require('../config/config')
-const helper = require('../helpers/mail.helper')
+const { mailRegister } = require('../helpers/mail.helper')
 const crypto = require('crypto');
 const sendmail = require('sendmail')();
 
@@ -72,14 +72,17 @@ exports.register = async (req, res, next) => {
                 // const link = '\nhttp:\/\/' + req.headers.host + '\/api\/v1\/users' + '\/confirmation\/' + token.token + '\n'
                 const link = '\nhttp:\/\/' + 'localhost:4000' + '\/verify\/' + token.token + '\n'
                 sendmail({
-                    from: `${helper.mailFrom}`,
-                    to: `${user.email}`,
-                    subject: `${helper.mailRegisterSubject}`,
-                    html: `${helper.mailContent(user.name, link)}`
+                    // from: `${helper.mailFrom}`,
+                    // to: `${user.email}`,
+                    // subject: `${helper.mailRegisterSubject}`,
+                    // html: `${helper.mailContent(user.name, link)}`
+                    from: mailRegister.mailFrom,
+                    to: user.email,
+                    subject: mailRegister.mailRegisterSubject,
+                    html: mailRegister.mailContent(user.name, link)
                 }, function (err, reply) {
                     if (err) {
-                        res.status(500).json({ msg: err.message });
-                        return
+                        return res.status(500).json({ msg: err.message });   
                     }
                 });
             })
@@ -210,7 +213,7 @@ exports.resetPassword = async (req, res) => {
                 html: `${helper.mailContent(user.name, link)}`
             }, function (err, reply) {
                 if (err) {
-                    return res.status(500).json({ msg: err.message }); 
+                    return res.status(500).json({ msg: err.message });
                 }
                 res.status(200).json({ message: 'A reset password mail has been sent to ' + user.email + '.' });
             });
@@ -218,7 +221,7 @@ exports.resetPassword = async (req, res) => {
     });
 }
 
-exports.verifyResetPassword = async (req, res) => { 
+exports.verifyResetPassword = async (req, res) => {
     const token = req.params.token
     await Token.findOne({ tokenResetPassword: token }, async function (err, token) {
         if (!token) return res.status(400).json({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
@@ -226,14 +229,14 @@ exports.verifyResetPassword = async (req, res) => {
         // If we found a token, find a matching user
         await User.findOne({ _id: token._userId }, function (err, user) {
             if (!user) return res.status(400).json({ msg: 'We were unable to find a user for this token.' });
-            
-            const newPassword = crypto.randomBytes(6).toString('hex') ;
+
+            const newPassword = crypto.randomBytes(6).toString('hex');
 
             // Verify and save the user
             user.password = user.generateHash(newPassword);
             user.save(function (err) {
                 if (err) { return res.status(500).json({ msg: err.message }); }
-                res.status(200).json({message: "Password has been reset. New password is " + newPassword});
+                res.status(200).json({ message: "Password has been reset. New password is " + newPassword });
             });
         });
     });
@@ -242,7 +245,7 @@ exports.verifyResetPassword = async (req, res) => {
 
 exports.profile = (req, res) => {
     // Search for user in database
-    console.log(' 1234: ',req)
+    console.log(' 1234: ', req)
     User.findOne({ _id: req.decoded.userId }).select('name email').exec((err, user) => {
         // Check if error connecting
         if (err) {
