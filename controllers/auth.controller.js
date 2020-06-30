@@ -77,6 +77,7 @@ exports.register = async (req, res, next) => {
                     // subject: `${helper.mailRegisterSubject}`,
                     // html: `${helper.mailContent(user.name, link)}`
                     from: mailRegister.mailFrom,
+                    sender: mailRegister.mailSender,
                     to: user.email,
                     subject: mailRegister.mailRegisterSubject,
                     html: mailRegister.mailContent(user.name, link)
@@ -92,7 +93,7 @@ exports.register = async (req, res, next) => {
     });
 }
 
-exports.confirmationUser = async (req, res, next) => {
+exports.confirmUser = async (req, res, next) => {
     const token = req.params.id
     await Token.findOne({ token: token }, async function (err, token) {
         if (!token) return res.status(400).json({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });

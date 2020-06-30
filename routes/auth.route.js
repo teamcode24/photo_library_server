@@ -20,7 +20,7 @@ const router = require('express').Router();
  /* ===============================================================
    route will be used for token confirmation
   =============================================================== */
-  router.post('/confirmation/:id', authController.confirmationUser);
+  router.post('/confirm/:id', authController.confirmUser);
 
  /* ===============================================================
    route will be used in case a user needs to resend a new confirmation token.
