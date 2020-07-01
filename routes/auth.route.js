@@ -7,19 +7,12 @@ const router = require('express').Router();
   ============== */
   router.post('/register', authController.register);
 
-  /* ============================================================
-     Route to check if user's email is available for registration
-  ============================================================ */
-  //router.get('/checkEmail/:email', authController.checkEmail);
-
-  /* ===============================================================
-     Route to check if user's username is available for registration
-  =============================================================== */
-  //router.get('/checkUsername/:username', authController.checkUsername);
+  router.post('/update', authController.updateAccount);
 
  /* ===============================================================
    route will be used for token confirmation
   =============================================================== */
+  router.post('/confirm/resend', authController.resendConfirm);
   router.post('/confirm/:id', authController.confirmUser);
 
  /* ===============================================================

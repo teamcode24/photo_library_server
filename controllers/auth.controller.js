@@ -65,17 +65,12 @@ exports.register = async (req, res, next) => {
             var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
             await token.save(err => {
                 if (err) {
-                    res.status(500).json({ msg: err.message });
-                    return
+                    return res.status(500).json({ msg: err.message });       
                 }
 
                 // const link = '\nhttp:\/\/' + req.headers.host + '\/api\/v1\/users' + '\/confirmation\/' + token.token + '\n'
                 const link = '\nhttp:\/\/' + 'localhost:4000' + '\/verify\/' + token.token + '\n'
                 sendmail({
-                    // from: `${helper.mailFrom}`,
-                    // to: `${user.email}`,
-                    // subject: `${helper.mailRegisterSubject}`,
-                    // html: `${helper.mailContent(user.name, link)}`
                     from: mailRegister.mailFrom,
                     sender: mailRegister.mailSender,
                     to: user.email,
@@ -83,12 +78,12 @@ exports.register = async (req, res, next) => {
                     html: mailRegister.mailContent(user.name, link)
                 }, function (err, reply) {
                     if (err) {
-                        return res.status(500).json({ msg: err.message });   
+                        return res.status(500).json({ msg: err.message });
                     }
                 });
             })
 
-            res.status(201).json({ success: true, message: `Your email ${user.email} has not been confirmed. Change email or Resend Confirmation` }); // Return success
+            res.status(201).json({ type: "register",success: true, message: `Your email ${user.email} has not been confirmed. Change email or Resend Confirmation` }); // Return success
         }
     });
 }
@@ -96,18 +91,18 @@ exports.register = async (req, res, next) => {
 exports.confirmUser = async (req, res, next) => {
     const token = req.params.id
     await Token.findOne({ token: token }, async function (err, token) {
-        if (!token) return res.status(400).json({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
+        if (!token) return res.status(400).json({ type: 'not-verified', message: 'We were unable to find a valid token. Your token my have expired.' });
 
         // If we found a token, find a matching user
         await User.findOne({ _id: token._userId }, function (err, user) {
             if (!user) return res.status(400).json({ msg: 'We were unable to find a user for this token.' });
-            if (user.isVerified) return res.status(400).json({ type: 'already-verified', msg: 'This user has already been verified.' });
+            if (user.isVerified) return res.status(400).json({ type: 'already-verified', message: 'This user has already been verified.' });
 
             // Verify and save the user
             user.isVerified = true;
             user.save(function (err) {
                 if (err) { return res.status(500).json({ msg: err.message }); }
-                res.status(200).json("The account has been verified. Please log in.");
+                res.status(200).json({type: "confirm", success: true, message: `Your email ${user.email} has been confirmed.`});
             });
         });
     });
@@ -260,4 +255,49 @@ exports.profile = (req, res) => {
         }
         res.status(200).json({ success: true, user: user }); // Return success, send user object to frontend for profile
     });
+}
+
+exports.updateAccount = async (req, res) => {
+    const newEmail = req.body.newEmail
+    const oldEmail = req.body.oldEmail
+
+    try {
+        await User.findOneAndUpdate({ email: oldEmail }, { email: newEmail })
+        return res.status(200).json({ type: 'update_account',success: true, message: 'Update done' })
+    } catch (error) {
+        return res.status(404).json({ message: error })
+    }
+}
+exports.resendConfirm = async (req, res) => {
+    const userId = req.body.id
+
+    try {
+        await User.findById({ _id: userId }, async (err, user) => {
+            var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+            await token.save(err => {
+                if (err) {
+                    res.status(500).json({ msg: err.message });
+                    return
+                }
+        
+                // const link = '\nhttp:\/\/' + req.headers.host + '\/api\/v1\/users' + '\/confirmation\/' + token.token + '\n'
+                const link = '\nhttp:\/\/' + 'localhost:4000' + '\/verify\/' + token.token + '\n'
+                sendmail({
+                    from: mailRegister.mailFrom,
+                    sender: mailRegister.mailSender,
+                    to: user.email,
+                    subject: mailRegister.mailRegisterSubject,
+                    html: mailRegister.mailContent(user.name, link)
+                }, function (err, reply) {
+                    if (err) {
+                        return res.status(500).json({ msg: err.message });
+                    }
+                });
+            })
+        
+            res.status(201).json({ type: 'resend_confirm', success: true, message: 'Check your inbox for a link to confirm your account' }); // Return success 
+        })
+    } catch (error) {
+        return res.status(404).json({ message: error })
+    } 
 }
