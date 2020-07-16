@@ -2,7 +2,8 @@ const User = require('../models/user.model'); // Import User Model Schema
 const Token = require('../models/token.model'); // Import Token Model Schema
 const jwt = require('jsonwebtoken'); // Compact, URL-safe means of representing claims to be transferred between two parties.
 const config = require('../config/config')
-const { mailRegister } = require('../helpers/mail.helper')
+const { mailRegister, mailChangeEmail } = require('../helpers/mail.helper')
+const { isEmpty } = require('../helpers/validation.helper')
 const crypto = require('crypto');
 const sendmail = require('sendmail')();
 
@@ -43,7 +44,7 @@ exports.register = async (req, res, next) => {
             res.json({ success: false, message: err }); // Return any other error not already covered
             return
         }
-        if (err && err.errors) {
+        if (err.errors) {
             // Check if validation error is in the email field
             if (err.errors.email) {
                 res.json({ success: false, message: err.errors.email.message }); // Return error
@@ -82,7 +83,7 @@ exports.register = async (req, res, next) => {
                     }
                 });
             })
-            res.status(201).json({ type: "register", success: true, message: `Your email ${user.email} has not been confirmed. Change email or Resend Confirmation` }); // Return success
+            res.status(201).json({ type: "register", success: true, message: `Your email ${user.email} has not been confirmed. __change_email__ or __resend_confirmation__` }); // Return success
         }
     });
 }
@@ -257,14 +258,55 @@ exports.profile = (req, res) => {
 }
 
 exports.updateAccount = async (req, res) => {
-    const newEmail = req.body.newEmail
-    const oldEmail = req.body.oldEmail
 
-    try {
-        await User.findOneAndUpdate({ email: oldEmail }, { email: newEmail })
-        return res.status(200).json({ type: 'update_account', success: true, message: 'Update done' })
-    } catch (error) {
-        return res.status(404).json({ message: error })
+    const updatedFields = {};
+    Object.keys(req.body).forEach(key => {
+        if (!isEmpty(req.body[key])) {
+            updatedFields[key] = req.body[key];
+        }
+    });
+
+    if (updatedFields.newEmail) {
+        await User.findOneAndUpdate({ email: updatedFields["oldEmail"] }, { email: updatedFields["newEmail"], name: updatedFields["name"] }, async (err, user) => {
+            if (err || !user) {
+                return res.status(404).json({ type: 'update_account', success: false, message: 'No account found' })
+            }
+            console.log('1234343', user)
+            // var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+            // await token.save(err => {
+            //     if (err) {
+            //         return res.status(500).json({ message: err.message });
+            //     }
+
+            //     // const link = '\nhttp:\/\/' + req.headers.host + '\/api\/v1\/users' + '\/confirmation\/' + token.token + '\n'
+            //     const link = '\nhttp:\/\/' + 'localhost:4000' + '\/verify\/' + token.token + '\n'
+            //     sendmail({
+            //         from: mailChangeEmail.mailFrom,
+            //         sender: mailChangeEmail.mailSender,
+            //         to: user.email,
+            //         subject: mailChangeEmail.mailRegisterSubject,
+            //         html: mailChangeEmail.mailContent(user.name, link)
+            //     }, function (err, reply) {
+            //         if (err) {
+            //             return res.status(500).json({ message: err.message });
+            //         }
+            //     });
+            // })
+
+            res.status(200).json({ type: 'update_account', success: true, message: 'Your account was successfully updated,'+
+            ' but we need to verify your new email address. Please check your email and follow the link to confirm your new address.' })
+        })
+
+    }
+
+    if (!updatedFields.newEmail) {
+        await User.findOneAndUpdate({ email: updatedFields["oldEmail"] }, { name: updatedFields["name"] },).exec((err, user) => {
+            if (err || !user) {
+                return res.status(404).json({ success: false, message: 'No account found' })
+            }
+            res.status(200).json({ type: 'update_account', success: true, message: 'Account updated!' })
+            // display in unsplash.com/account
+        })
     }
 }
 exports.resendConfirm = async (req, res) => {

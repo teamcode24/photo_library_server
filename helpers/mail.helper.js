@@ -15,7 +15,23 @@ const mailRegister = {
   },
 };
 
-module.exports = {
+const mailChangeEmail = {
+  mailFrom: 'delivery@unsplash.com',
+  mailSender: 'Unsplash Team',
+  mailRegisterSubject: 'Confirm your new email address',
+  mailContent: (name, link) => {
+    return `
+            Hey ${name} <br>
+            In order to update your Unsplash account email you need to confirm the new address by
+            following the link below<br>
+            <a href=${link}>Click here to confirm your new email</a><br>
+            Your email address won't be updated until you access the link above<br>
+            — Unsplash
+        `;
+  },
+};
 
+module.exports = {
+  mailChangeEmail,
   mailRegister,
 };

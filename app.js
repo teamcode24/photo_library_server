@@ -44,6 +44,7 @@ mongoose.connect(config.URI_MONGO, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useCreateIndex: true,
+  useFindAndModify: false
 }, (err) => {
   // Check if database was able to connect
   if (err) {
