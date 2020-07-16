@@ -44,23 +44,23 @@ exports.register = async (req, res, next) => {
             res.json({ success: false, message: err }); // Return any other error not already covered
             return
         }
-        if (err.errors) {
-            // Check if validation error is in the email field
-            if (err.errors.email) {
-                res.json({ success: false, message: err.errors.email.message }); // Return error
-                return
-            }
-            // Check if validation error is in the username field
-            if (err.errors.name) {
-                res.json({ success: false, message: err.errors.name.message }); // Return error
-                return
-            }
-            // Check if validation error is in the password field
-            if (err.errors.password) {
-                res.json({ success: false, message: err.errors.password.message }); // Return error
-                return
-            }
-        }
+        // if (err.errors) {
+        //     // Check if validation error is in the email field
+        //     if (err.errors.email) {
+        //         res.json({ success: false, message: err.errors.email.message }); // Return error
+        //         return
+        //     }
+        //     // Check if validation error is in the username field
+        //     if (err.errors.name) {
+        //         res.json({ success: false, message: err.errors.name.message }); // Return error
+        //         return
+        //     }
+        //     // Check if validation error is in the password field
+        //     if (err.errors.password) {
+        //         res.json({ success: false, message: err.errors.password.message }); // Return error
+        //         return
+        //     }
+        // }
 
         if (!err) {
             var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
@@ -70,18 +70,18 @@ exports.register = async (req, res, next) => {
                 }
 
                 // const link = '\nhttp:\/\/' + req.headers.host + '\/api\/v1\/users' + '\/confirmation\/' + token.token + '\n'
-                const link = '\nhttp:\/\/' + 'localhost:4000' + '\/verify\/' + token.token + '\n'
-                sendmail({
-                    from: mailRegister.mailFrom,
-                    sender: mailRegister.mailSender,
-                    to: user.email,
-                    subject: mailRegister.mailRegisterSubject,
-                    html: mailRegister.mailContent(user.name, link)
-                }, function (err, reply) {
-                    if (err) {
-                        return res.status(500).json({ message: err.message });
-                    }
-                });
+                // const link = '\nhttp:\/\/' + 'localhost:4000' + '\/verify\/' + token.token + '\n'
+                // sendmail({
+                //     from: mailRegister.mailFrom,
+                //     sender: mailRegister.mailSender,
+                //     to: user.email,
+                //     subject: mailRegister.mailRegisterSubject,
+                //     html: mailRegister.mailContent(user.name, link)
+                // }, function (err, reply) {
+                //     if (err) {
+                //         return res.status(500).json({ message: err.message });
+                //     }
+                // });
             })
             res.status(201).json({ type: "register", success: true, message: `Your email ${user.email} has not been confirmed. __change_email__ or __resend_confirmation__` }); // Return success
         }
