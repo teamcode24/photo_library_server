@@ -83,7 +83,7 @@ exports.register = async (req, res, next) => {
                 //     }
                 // });
             })
-            res.status(201).json({ type: "register", success: true, message: `Your email ${user.email} has not been confirmed. __change_email__ or __resend_confirmation__` }); // Return success
+            res.status(201).json({ type: "register", success: true, email: `${user.email}`, message: `Your email ${user.email} has not been confirmed. __change_email__ or __resend_confirmation__` }); // Return success
         }
     });
 }
@@ -293,8 +293,10 @@ exports.updateAccount = async (req, res) => {
             //     });
             // })
 
-            res.status(200).json({ type: 'update_account', success: true, message: 'Your account was successfully updated,'+
-            ' but we need to verify your new email address. Please check your email and follow the link to confirm your new address.' })
+            res.status(200).json({
+                type: 'update_account', success: true, message: 'Your account was successfully updated,' +
+                    ' but we need to verify your new email address. Please check your email and follow the link to confirm your new address.'
+            })
         })
 
     }
