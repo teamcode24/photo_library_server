@@ -83,7 +83,7 @@ exports.register = async (req, res, next) => {
                 //     }
                 // });
             })
-            res.status(201).json({ type: "register", success: true, email: `${user.email}`, message: `Your email ${user.email} has not been confirmed. __change_email__ or __resend_confirmation__` }); // Return success
+            res.status(201).json({ type: "register", success: true, email: `${user.email}`, message: `Your email __email__ has not been confirmed. __change_email__ or __resend_confirmation__` }); // Return success
         }
     });
 }
