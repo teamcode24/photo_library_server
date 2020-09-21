@@ -69,19 +69,19 @@ exports.register = async (req, res, next) => {
                     return res.status(500).json({ message: err.message });
                 }
 
-                // const link = '\nhttp:\/\/' + req.headers.host + '\/api\/v1\/users' + '\/confirmation\/' + token.token + '\n'
+                const link = '\nhttp:\/\/' + req.headers.host + '\/api\/v1\/users' + '\/confirmation\/' + token.token + '\n'
                 // const link = '\nhttp:\/\/' + 'localhost:4000' + '\/verify\/' + token.token + '\n'
-                // sendmail({
-                //     from: mailRegister.mailFrom,
-                //     sender: mailRegister.mailSender,
-                //     to: user.email,
-                //     subject: mailRegister.mailRegisterSubject,
-                //     html: mailRegister.mailContent(user.name, link)
-                // }, function (err, reply) {
-                //     if (err) {
-                //         return res.status(500).json({ message: err.message });
-                //     }
-                // });
+                sendmail({
+                    from: mailRegister.mailFrom,
+                    sender: mailRegister.mailSender,
+                    to: user.email,
+                    subject: mailRegister.mailRegisterSubject,
+                    html: mailRegister.mailContent(user.name, link)
+                }, function (err, reply) {
+                    if (err) {
+                        return res.status(500).json({ message: err.message });
+                    }
+                });
             })
             res.status(201).json({ type: "register", success: true, email: `${user.email}`, message: `Your email __email__ has not been confirmed. __change_email__ or __resend_confirmation__` }); // Return success
         }
